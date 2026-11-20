@@ -3,6 +3,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
 from sklearn.impute import SimpleImputer,KNNImputer
+from imblearn.over_sampling import SMOTE
 def data_preprocessing(df):
     '''
     # Step1: Drop duplicated values
@@ -19,12 +20,12 @@ def data_preprocessing(df):
     # ----------------------------------------------------------------------------
     '''
     # Step1: Drop duplicated values
-    df = df.drop_duplicates(inplace = True)
+    df = df.drop_duplicates()
 
     # Step2: Feature Engineering and Feature Selection (Optional)
 
     # Step3: Split the data into X and y
-    X = df.drop(columns = ['customerID','Churn'])
+    X = df.drop(columns = ['customerID', 'Churn'])
     y = df['Churn']
 
     # Step4 Split the data into train and test sets
@@ -62,3 +63,7 @@ def data_preprocessing(df):
 
         - under_sampling technique
     '''
+    X_train, y_train = SMOTE().fit_resample(X_train, y_train)
+
+    # Step11: Return X_train, X_test, y_train, y_test
+    return X_train, X_test, y_train, y_test
